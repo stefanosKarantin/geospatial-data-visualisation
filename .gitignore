@@ -3,6 +3,8 @@
 # dependencies
 /webapp/node_modules/
 /webapp/package-lock.json
+/server/build/
+/webapp/build/
 
 /.pnp
 .pnp.js
