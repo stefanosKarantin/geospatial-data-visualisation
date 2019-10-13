@@ -13,7 +13,7 @@ import { Home } from './Home';
 
 const Root = () => (
   <div style={{height: '100%'}}>
-    <AppBar />
+    {/*<AppBar />*/}
     <Route exact path='/' component={Home}/>
   </div>
 );
