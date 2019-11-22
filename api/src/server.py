@@ -26,7 +26,7 @@ AUTH0_DOMAIN = env.get(constants.AUTH0_DOMAIN)
 AUTH0_BASE_URL = 'https://' + AUTH0_DOMAIN
 AUTH0_AUDIENCE = env.get(constants.AUTH0_AUDIENCE)
 
-app = Flask(__name__, static_folder="build/static", template_folder="build")
+app = Flask(__name__)
 app.secret_key = constants.SECRET_KEY
 app.debug = True
 
@@ -61,13 +61,13 @@ def requires_auth(f):
   return decorated
 
 # creates a Flask application, named app
-@app.route("/")
-def hello():
-    return render_template('index.html')
+# @app.route("/")
+# def hello():
+#     return render_template('index.html')
 
 @app.route('/callback')
 def callback_handling():
-    print('ne ti')
+    app.logger.info('ne ti')
     # Handles response from token endpoint
     auth0.authorize_access_token()
     resp = auth0.get('userinfo')
@@ -80,10 +80,11 @@ def callback_handling():
         'name': userinfo['name'],
         'picture': userinfo['picture']
     }
-    return redirect('/dashboard')
+    return redirect('/')
 
 @app.route('/login')
 def login():
+    app.logger.info('this is an INFO message')
     return auth0.authorize_redirect(redirect_uri=AUTH0_CALLBACK_URL)
 
 # @app.route('/dashboard')
@@ -103,4 +104,4 @@ def logout():
 
 # run the application
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', port=5090, debug=True)

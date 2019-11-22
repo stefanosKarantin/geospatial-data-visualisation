@@ -1,0 +1,30 @@
+version: '3'
+services:
+    ui:
+        image: stephar/geospatial-data-visualisation-ui:latest
+        volumes:
+            -  static-ui-content:/app
+    api:
+        build:
+            context: api
+            dockerfile: Dockerfile
+        networks:
+            - web_nw    
+    proxy:
+        build:
+            context: proxy
+            dockerfile: Dockerfile
+        volumes:
+            -  static-ui-content:/ui
+        depends_on:
+            - ui
+            - api
+        ports:
+            - "80:80"
+        networks:
+            - web_nw          
+networks:
+    web_nw:
+        driver: bridge
+volumes:
+    static-ui-content:
