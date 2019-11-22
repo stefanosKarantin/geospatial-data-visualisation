@@ -67,7 +67,6 @@ def requires_auth(f):
 
 @app.route('/callback')
 def callback_handling():
-    app.logger.info('ne ti')
     # Handles response from token endpoint
     auth0.authorize_access_token()
     resp = auth0.get('userinfo')
@@ -80,26 +79,19 @@ def callback_handling():
         'name': userinfo['name'],
         'picture': userinfo['picture']
     }
-    return redirect('/')
+    return redirect('http://localhost/')
 
 @app.route('/login')
 def login():
-    app.logger.info('this is an INFO message')
+    app.logger.info('Redirecting to auth0 login page...')
     return auth0.authorize_redirect(redirect_uri=AUTH0_CALLBACK_URL)
-
-# @app.route('/dashboard')
-# @requires_auth
-# def dashboard():
-#     return render_template('dashboard.html',
-#                            userinfo=session['profile'],
-#                            userinfo_pretty=json.dumps(session['jwt_payload'], indent=4))
 
 @app.route('/logout')
 def logout():
     # Clear session stored data
     session.clear()
     # Redirect user to logout endpoint
-    params = {'returnTo': url_for('home', _external=True), 'client_id': AUTH0_CLIENT_ID}
+    params = {'returnTo': url_for('', _external=True), 'client_id': AUTH0_CLIENT_ID}
     return redirect(auth0.api_base_url + '/v2/logout?' + urlencode(params))
 
 # run the application

@@ -22,7 +22,16 @@ services:
         ports:
             - "80:80"
         networks:
-            - web_nw          
+            - web_nw
+    postgres:
+        build:
+            context: ./postgres
+            args:
+                - POSTGRES_DB=${POSTGRES_DB}
+                - POSTGRES_USER=${POSTGRES_USER}
+        ports:
+            - "${DB_PORT1}:${DB_PORT2}"
+        env_file: .env       
 networks:
     web_nw:
         driver: bridge
