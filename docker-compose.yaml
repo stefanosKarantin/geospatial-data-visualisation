@@ -3,13 +3,11 @@ services:
     ui:
         image: stephar/geospatial-data-visualisation-ui:latest
         volumes:
-            -  static-ui-content:/app
+            -  static-ui-content:/build
     api:
-        build:
-            context: api
-            dockerfile: Dockerfile
+        image: stephar/geospatial-data-visualisation-api:latest
         networks:
-            - web_nw    
+            - web_nw
     proxy:
         build:
             context: proxy
@@ -20,7 +18,7 @@ services:
             - ui
             - api
         ports:
-            - "80:80"
+            - "8000:8000"
         networks:
             - web_nw
     postgres:
@@ -31,7 +29,7 @@ services:
                 - POSTGRES_USER=${POSTGRES_USER}
         ports:
             - "${DB_PORT1}:${DB_PORT2}"
-        env_file: .env       
+        env_file: .env
 networks:
     web_nw:
         driver: bridge
