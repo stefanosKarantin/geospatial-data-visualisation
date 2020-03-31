@@ -11,4 +11,8 @@ RUN apt-get update; apt-get install -y postgresql-client-11 postgresql-common po
 
 EXPOSE 5432
 
+COPY ./datasets/countries.geojson /
+COPY ./datasets/periferies.geojson /
+COPY ./datasets/periferies.csv /
+
 ADD ./db-init/ /docker-entrypoint-initdb.d/

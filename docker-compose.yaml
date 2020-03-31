@@ -8,6 +8,11 @@ services:
         image: stephar/geospatial-data-visualisation-api:latest
         networks:
             - web_nw
+    # tileserver:
+    #     image: urbica/martin
+    #     ports:
+    #         - "${TILE_PORT1}:${TILE_PORT2}"
+    #     env_file: .env
     proxy:
         build:
             context: proxy
