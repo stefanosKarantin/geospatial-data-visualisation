@@ -72,3 +72,16 @@ insert into regions (id, name, geom)
 select * from temp_regions order by name;
 COMMIT;
 
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    registered_on TIMESTAMP NOT NULL,
+    admin BOOLEAN NOT NULL
+) ;
+
+CREATE TABLE blacklist_tokens (
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(500) NOT NULL,
+    blacklisted_on TIMESTAMP NOT NULL
+) ;

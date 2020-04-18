@@ -8,6 +8,12 @@ services:
         image: stephar/geospatial-data-visualisation-api:latest
         networks:
             - web_nw
+        ports:
+            - "5000"
+        environment:
+            - DB_HOST_PORT="postgres:${DB_PORT2}"
+            - DB_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432"
+        env_file: .env
     # tileserver:
     #     image: urbica/martin
     #     ports:
@@ -32,11 +38,20 @@ services:
             args:
                 - POSTGRES_DB=${POSTGRES_DB}
                 - POSTGRES_USER=${POSTGRES_USER}
+        networks:
+            - web_nw
         ports:
             - "${DB_PORT1}:${DB_PORT2}"
         env_file: .env
+        volumes:
+            - dbData:/var/lib/postgresql/data
 networks:
     web_nw:
         driver: bridge
 volumes:
     static-ui-content:
+        labels:
+            persistent: 'false'
+    dbData:
+        labels:
+            persistent: 'true'
