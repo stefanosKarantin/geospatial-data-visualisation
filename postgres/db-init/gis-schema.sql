@@ -1,5 +1,3 @@
-CREATE EXTENSION IF NOT EXISTS postgis;
-
 CREATE TABLE countries (
     id varchar(10),
     name varchar(100),
@@ -58,8 +56,8 @@ CREATE TEMPORARY TABLE temp_regions (
 
 insert into temp_regions (id, name, geom)
   SELECT
-    feat->'properties'->>'PER' AS name,
     feat->>'id' AS id,
+    feat->'properties'->>'PER' AS name,
     ST_SetSRID(ST_AsText(ST_GeomFromGeoJSON(feat->>'geometry')), 4326) AS geom
   FROM (
     SELECT json_array_elements(fc->'features') AS feat
@@ -72,3 +70,16 @@ insert into regions (id, name, geom)
 select * from temp_regions order by name;
 COMMIT;
 
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    registered_on TIMESTAMP NOT NULL,
+    admin BOOLEAN NOT NULL
+) ;
+
+CREATE TABLE blacklist_tokens (
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(500) NOT NULL,
+    blacklisted_on TIMESTAMP NOT NULL
+) ;
