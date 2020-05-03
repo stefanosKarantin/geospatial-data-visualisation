@@ -6,19 +6,20 @@ services:
             -  static-ui-content:/build
     api:
         image: stephar/geospatial-data-visualisation-api:latest
+        links:
+            - postgres
+        ports:
+            - "${API_PORT}"
+        environment:
+            - DB_HOST_PORT=postgres:${DB_PORT2}
+            - DB_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/
+        env_file: .env
+        depends_on:
+            - postgres
+        links:
+            - postgres
         networks:
             - web_nw
-        ports:
-            - "5000"
-        environment:
-            - DB_HOST_PORT="postgres:${DB_PORT2}"
-            - DB_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432"
-        env_file: .env
-    # tileserver:
-    #     image: urbica/martin
-    #     ports:
-    #         - "${TILE_PORT1}:${TILE_PORT2}"
-    #     env_file: .env
     proxy:
         build:
             context: proxy
@@ -29,7 +30,11 @@ services:
             - ui
             - api
         ports:
-            - "8000:8000"
+            - "${PROXY_PORT}:${PROXY_PORT}"
+        depends_on:
+            - api
+        links:
+            - api
         networks:
             - web_nw
     postgres:
@@ -47,7 +52,7 @@ services:
             - dbData:/var/lib/postgresql/data
 networks:
     web_nw:
-        driver: bridge
+        driver: "bridge"
 volumes:
     static-ui-content:
         labels:
