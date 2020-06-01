@@ -1,14 +1,14 @@
-from shp2postgis import pred2db
 import psycopg2
 
+from pred2db import creategeotable, shp2table
 try:
     conn = psycopg2.connect("dbname='devdb' user='postgres' host='localhost' port='5431' password='postgres'")
+    conn.autocommit = True
 except:
     print ("I am unable to connect to the database")
 
-conn.autocommit = True
 cursor = conn.cursor()
 
-pred2db.creategeotable(cursor, 'geodata')
-
-pred2db.shp2table(cursor, './creta_data/whole/whole.shp', 'geodata')
+creategeotable(cursor, 'crops')
+ 
+shp2table(cursor, './shp_kk/CropType_only_predicted.shp', 'crops')
